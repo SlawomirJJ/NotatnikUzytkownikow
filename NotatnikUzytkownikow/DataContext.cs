@@ -14,7 +14,7 @@ namespace NotatnikUzytkownikow
         {
             modelBuilder.Entity<User>(u =>
             {
-                u.Property(x => x.Name)
+                u.Property(x => x.FirstName)
                 .IsRequired()
                 .HasMaxLength(50);
 
@@ -36,7 +36,7 @@ namespace NotatnikUzytkownikow
 
             modelBuilder.Entity<AdditionalAttribute>(a =>
             {
-                a.Property(x => x.Name)
+                a.Property(x => x.AttributeName)
                 .IsRequired()
                 .HasMaxLength(50);
 
