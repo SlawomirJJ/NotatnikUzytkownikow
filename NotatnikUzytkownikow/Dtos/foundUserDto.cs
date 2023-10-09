@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace NotatnikUzytkownikow.Dtos
 {
-    public class foundUserDto
+    public class FoundUserDto
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }

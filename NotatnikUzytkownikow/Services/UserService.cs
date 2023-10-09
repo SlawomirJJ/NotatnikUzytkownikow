@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NotatnikUzytkownikow.Dtos;
 using NotatnikUzytkownikow.Entities;
@@ -11,10 +12,12 @@ namespace NotatnikUzytkownikow.Services
     public class UserService : IUserService
     {
         private readonly DataContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public UserService(DataContext dbContext)
+        public UserService(DataContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
 
@@ -58,16 +61,17 @@ namespace NotatnikUzytkownikow.Services
             await _dbContext.SaveChangesAsync();
         }      
         
-        public async Task<List<foundUserDto>> GetAllUsers()
+        public async Task<List<FoundUserDto>> GetAllUsers()
         {
-            var foundUsers = await _dbContext.Users.ToListAsync();
+            var foundUsers = await _dbContext.Users.Include(x => x.AdditionalAttributes).ToListAsync();
 
-            var foundUserDtoList = foundUsers.Select(f => new foundUserDto()
+            var foundUserDtoList = foundUsers.Select(f => new FoundUserDto()
             {
                 FirstName = f.FirstName,
                 LastName = f.LastName,
                 BirthDate = DateOnly.FromDateTime(f.BirthDate),
                 Gender = f.Gender,
+                AdditionalAttributes = _mapper.Map<List<AdditionalAttributeRequest>>(f.AdditionalAttributes)
 
             })
             .ToList();
@@ -87,7 +91,7 @@ namespace NotatnikUzytkownikow.Services
             foundUser.FirstName = request.FirstName;
             foundUser.LastName = request.LastName;
             foundUser.BirthDate = request.BirthDate.ToDateTime(t);
-            foundUser.Gender = request.LastName;
+            foundUser.Gender = request.Gender;
 
             _dbContext.Users.Update(foundUser);
 
@@ -114,6 +118,21 @@ namespace NotatnikUzytkownikow.Services
         public Task GenerateRaport(Guid id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Guid> GetUserId(CreateUserRequest request)
+        {
+            var t = TimeOnly.Parse("00:00:00");
+
+            Guid foundId = await _dbContext.Users
+                .Where(x => x.BirthDate == request.BirthDate.ToDateTime(t)
+                    && x.FirstName == request.FirstName
+                    && x.Gender == request.Gender
+                    && x.LastName == request.LastName)
+                .Select(x => x.Id)
+                .FirstOrDefaultAsync();
+
+            return foundId;
         }
     }
 }

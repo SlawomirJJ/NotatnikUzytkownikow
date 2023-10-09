@@ -1,5 +1,7 @@
 using NotatnikUzytkownikow;
+using NotatnikUzytkownikow.Entities;
 using NotatnikUzytkownikow.Interfaces;
+using NotatnikUzytkownikow.Mappers;
 using NotatnikUzytkownikow.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,17 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<DataContext>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddAutoMapper(typeof(AdditionalAttributeMappingProfile));
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -21,6 +34,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

@@ -6,9 +6,10 @@ namespace NotatnikUzytkownikow.Interfaces
     public interface IUserService
     {
         Task CreateUser(CreateUserRequest request);
-        Task<List<foundUserDto>> GetAllUsers();
+        Task<List<FoundUserDto>> GetAllUsers();
         Task UpdateUser(UpdateUserRequest request);
         Task DeleteUser(Guid id);
         Task GenerateRaport(Guid id);
+        Task<Guid> GetUserId(CreateUserRequest request);
     }
 }
