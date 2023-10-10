@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using NotatnikUzytkownikow.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace NotatnikUzytkownikow.Requests
 {
@@ -13,7 +14,7 @@ namespace NotatnikUzytkownikow.Requests
         [Required]
         public DateOnly BirthDate { get; set; }
         [Required]
-        public string Gender { get; set; }
+        public Genders Gender { get; set; }
 
         public List<AdditionalAttributeRequest>? AdditionalAttributes { get; set; }
     }

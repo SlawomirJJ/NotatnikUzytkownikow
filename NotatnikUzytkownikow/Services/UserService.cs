@@ -31,7 +31,7 @@ namespace NotatnikUzytkownikow.Services
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                Gender = request.Gender,
+                Gender = request.Gender.ToString(),
                 BirthDate = request.BirthDate.ToDateTime(t)
             };
 
@@ -94,7 +94,7 @@ namespace NotatnikUzytkownikow.Services
             foundUser.FirstName = request.FirstName;
             foundUser.LastName = request.LastName;
             foundUser.BirthDate = request.BirthDate.ToDateTime(t);
-            foundUser.Gender = request.Gender;
+            foundUser.Gender = request.Gender.ToString();
 
             _dbContext.Users.Update(foundUser);
 
@@ -125,7 +125,7 @@ namespace NotatnikUzytkownikow.Services
             Guid foundId = await _dbContext.Users
                 .Where(x => x.BirthDate == request.BirthDate.ToDateTime(t)
                     && x.FirstName == request.FirstName
-                    && x.Gender == request.Gender
+                    && x.Gender == request.Gender.ToString()
                     && x.LastName == request.LastName)
                 .Select(x => x.Id)
                 .FirstOrDefaultAsync();

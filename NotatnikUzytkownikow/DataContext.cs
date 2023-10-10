@@ -6,7 +6,8 @@ namespace NotatnikUzytkownikow
 {
     public class DataContext : DbContext
     {
-        private string _connectionString = "Server = (localdb)\\MSSQLLocalDB; Database=NotatnikDb; Trusted_Connection=True";
+        public DataContext(DbContextOptions<DataContext> options) : base(options) { }
+
         public DbSet<User> Users { get; set; }
         public DbSet<AdditionalAttribute> AdditionalAttributes { get; set; }
 
@@ -49,9 +50,5 @@ namespace NotatnikUzytkownikow
             });    
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
-        }
     }
 }
