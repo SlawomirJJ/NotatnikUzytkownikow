@@ -5,7 +5,10 @@ using NotatnikUzytkownikow.Dtos;
 using NotatnikUzytkownikow.Entities;
 using NotatnikUzytkownikow.Interfaces;
 using NotatnikUzytkownikow.Requests;
+using PdfSharpCore;
+using PdfSharpCore.Pdf;
 using System.Data;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace NotatnikUzytkownikow.Services
 {
@@ -115,11 +118,6 @@ namespace NotatnikUzytkownikow.Services
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task GenerateRaport(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Guid> GetUserId(CreateUserRequest request)
         {
             var t = TimeOnly.Parse("00:00:00");
@@ -134,5 +132,52 @@ namespace NotatnikUzytkownikow.Services
 
             return foundId;
         }
+
+        public async Task<byte[]> GenerateReport()
+        {
+            var document = new PdfDocument();
+
+            string htmlContent = "<html><body>";
+
+            htmlContent += "<table border='1'>";
+            htmlContent += "<thead><tr>";
+            htmlContent += "<th>Imię</th>";
+            htmlContent += "<th>Nazwisko</th>";
+            htmlContent += "<th>Data urodzenia</th>";
+            htmlContent += "<th>Płeć</th>";
+            htmlContent += "<th>Tytuł</th>";
+            htmlContent += "<th>Wiek</th>";
+            htmlContent += "</tr></thead>";
+            htmlContent += "<tbody>";
+
+            var users = await GetAllUsers();
+
+            foreach (var user in users)
+            {
+                htmlContent += "<tr>";
+                htmlContent += $"<td>{user.FirstName}</td>";
+                htmlContent += $"<td>{user.LastName}</td>";
+                htmlContent += $"<td>{user.BirthDate.ToShortDateString()}</td>";
+                htmlContent += $"<td>{user.Gender}</td>";
+                htmlContent += $"<td>{(user.Gender == "Male" ? "Pan" : "Pani")}</td>";
+                htmlContent += $"<td>{(DateTime.Now.Year - user.BirthDate.Year)}</td>";
+                htmlContent += "</tr>";
+            }
+
+            htmlContent += "</tbody></table>";
+            htmlContent += "</body></html>";
+
+            PdfGenerator.AddPdfPages(document, htmlContent, PageSize.A4);
+            byte[] responseBytes;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                document.Save(ms);
+                responseBytes = ms.ToArray();
+            }
+
+            return responseBytes;
+        }
+
     }
 }

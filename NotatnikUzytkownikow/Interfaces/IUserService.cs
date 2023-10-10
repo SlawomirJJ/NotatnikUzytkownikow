@@ -1,4 +1,5 @@
-﻿using NotatnikUzytkownikow.Dtos;
+﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NotatnikUzytkownikow.Dtos;
 using NotatnikUzytkownikow.Requests;
 
 namespace NotatnikUzytkownikow.Interfaces
@@ -9,7 +10,7 @@ namespace NotatnikUzytkownikow.Interfaces
         Task<List<FoundUserDto>> GetAllUsers();
         Task UpdateUser(UpdateUserRequest request);
         Task DeleteUser(Guid id);
-        Task GenerateRaport(Guid id);
+        Task<byte[]> GenerateReport();
         Task<Guid> GetUserId(CreateUserRequest request);
     }
 }

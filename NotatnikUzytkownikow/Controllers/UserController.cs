@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using NotatnikUzytkownikow.Dtos;
 using NotatnikUzytkownikow.Interfaces;
 using NotatnikUzytkownikow.Requests;
+using PdfSharpCore.Pdf;
+using PdfSharpCore;
 using System.Data;
 using System.Security.Claims;
+using TheArtOfDev.HtmlRenderer.PdfSharp;
 
 namespace NotatnikUzytkownikow.Controllers
 {
@@ -78,6 +81,21 @@ namespace NotatnikUzytkownikow.Controllers
             return Ok(await _userService.GetUserId(request));
         }
 
+        /// <summary>
+        ///     Generowanie raportu
+        /// </summary>
+        [HttpGet("GenerateReport")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GenerateReport()
+        {
+            byte[] pdfBytes = await _userService.GenerateReport();
+            DateTime currentDateTime = DateTime.Now;
+            string formattedDateTime = currentDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            string filename = formattedDateTime + ".pdf";
+
+            return File(pdfBytes, "application/pdf", filename);
+        }
 
 
     }
