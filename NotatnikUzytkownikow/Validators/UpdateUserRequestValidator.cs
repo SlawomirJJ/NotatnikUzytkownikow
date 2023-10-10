@@ -19,11 +19,30 @@ namespace NotatnikUzytkownikow.Validators
 
             RuleFor(x => x.BirthDate)
                 .NotEmpty()
+                .Must(BeValidBirthDate)
                 .WithErrorCode("invalid_birth_date");
 
             RuleFor(x => x.Gender)
                 .IsInEnum()
                 .WithErrorCode("invalid_gender");
+        }
+
+        private bool BeValidBirthDate(DateOnly birthDate)
+        {
+            DateOnly todayDateOnly = DateOnly.FromDateTime(DateTime.Today);
+
+            int userAge = todayDateOnly.Year - birthDate.Year;
+            int maxAge = 122;
+
+            if (birthDate <= todayDateOnly && userAge <= maxAge)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
         }
     }
 }

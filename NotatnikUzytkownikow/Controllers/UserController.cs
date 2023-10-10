@@ -24,7 +24,7 @@ namespace NotatnikUzytkownikow.Controllers
 
 
         /// <summary>
-        ///     Dodanie użytownika
+        ///     Add user
         /// </summary>
         [HttpPost("CreateUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -36,7 +36,7 @@ namespace NotatnikUzytkownikow.Controllers
         }
 
         /// <summary>
-        ///     Wyświetlenie wszystkich użytkowników
+        ///     return all users
         /// </summary>
         [HttpGet("GetAllUsers")]
         [ProducesResponseType(typeof(List<FoundUserDto>), StatusCodes.Status200OK)]
@@ -47,7 +47,7 @@ namespace NotatnikUzytkownikow.Controllers
         }
 
         /// <summary>
-        ///     Update użytownika
+        ///     Update user
         /// </summary>
         [HttpPut("UpdateUser")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -59,7 +59,7 @@ namespace NotatnikUzytkownikow.Controllers
         }
 
         /// <summary>
-        ///     Usunięcie użytownika
+        ///     Delete user
         /// </summary>
         [HttpDelete("DeleteUser/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -71,7 +71,7 @@ namespace NotatnikUzytkownikow.Controllers
         }
 
         /// <summary>
-        ///     Zwrócenie Id użytkownika na podstawie jego danych osobowych
+        ///     Returning the user's Id based on his personal data
         /// </summary>
         [HttpGet("GetUserId")]
         [ProducesResponseType(typeof(Guid), StatusCodes.Status200OK)]
@@ -82,7 +82,7 @@ namespace NotatnikUzytkownikow.Controllers
         }
 
         /// <summary>
-        ///     Generowanie raportu
+        ///     Generating a report
         /// </summary>
         [HttpGet("GenerateReport")]
         [ProducesResponseType(StatusCodes.Status200OK)]
